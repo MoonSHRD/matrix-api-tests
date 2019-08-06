@@ -2,6 +2,7 @@ package user
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -25,6 +26,30 @@ func TestRegister(t *testing.T) {
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatalf(err.Error())
+	}
+
+	if status := res.StatusCode; status != http.StatusOK {
+		// Get 400 status code if user already exist
+		t.Errorf("Wrong status code: got %v want %v", status, http.StatusOK)
+	}
+}
+
+func TestRegisterAvailable(t *testing.T) {
+	req, err := http.NewRequest("GET", Config.BaseURI+"/_matrix/client/r0/register/available", nil)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	query := req.URL.Query()
+	query.Add("username", "test")
+
+	req.URL.RawQuery = query.Encode()
+
+	fmt.Println(req.URL.String())
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err.Error())
 	}
 
 	if status := res.StatusCode; status != http.StatusOK {
