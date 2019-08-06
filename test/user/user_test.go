@@ -2,7 +2,6 @@ package user
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -25,7 +24,7 @@ func TestRegister(t *testing.T) {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	if status := res.StatusCode; status != http.StatusOK {
@@ -44,8 +43,6 @@ func TestRegisterAvailable(t *testing.T) {
 	query.Add("username", "test")
 
 	req.URL.RawQuery = query.Encode()
-
-	fmt.Println(req.URL.String())
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
