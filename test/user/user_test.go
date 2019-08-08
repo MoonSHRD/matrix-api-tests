@@ -2,6 +2,7 @@ package user
 
 import (
 	"bytes"
+	"io/ioutil"
 	"net/http"
 	"testing"
 
@@ -28,8 +29,16 @@ func TestRegister(t *testing.T) {
 	}
 
 	if status := res.StatusCode; status != http.StatusOK {
-		// Get 400 status code if user already exist
-		t.Errorf("Wrong status code: got %v want %v", status, http.StatusOK)
+		resBody, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		// Checks if user already exists
+		expected := []byte(`{"errcode": "M_USER_IN_USE","error": "User ID already taken."}`)
+		if !bytes.Equal(resBody, expected) {
+			t.Errorf("Wrong status code: got %v want %v", status, http.StatusOK)
+		}
 	}
 }
 
@@ -50,7 +59,15 @@ func TestRegisterAvailable(t *testing.T) {
 	}
 
 	if status := res.StatusCode; status != http.StatusOK {
-		// Get 400 status code if user already exist
-		t.Errorf("Wrong status code: got %v want %v", status, http.StatusOK)
+		resBody, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		// Checks if user already exists
+		expected := []byte(`{"errcode": "M_USER_IN_USE","error": "User ID already taken."}`)
+		if !bytes.Equal(resBody, expected) {
+			t.Errorf("Wrong status code: got %v want %v", status, http.StatusOK)
+		}
 	}
 }
