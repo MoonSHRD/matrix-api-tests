@@ -2,11 +2,16 @@ package user
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"testing"
 
 	. "github.com/MoonSHRD/matrix-api-tests/configs"
+)
+
+var (
+	user User
 )
 
 func TestRegister(t *testing.T) {
@@ -39,6 +44,10 @@ func TestRegister(t *testing.T) {
 		if !bytes.Equal(resBody, expected) {
 			t.Errorf("Wrong status code: got %v want %v", status, http.StatusOK)
 		}
+	}
+
+	if err = json.NewDecoder(res.Body).Decode(user); err != nil {
+		t.Fatal(err.Error())
 	}
 }
 
