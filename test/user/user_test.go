@@ -96,3 +96,24 @@ func TestGetUserInfoByID(t *testing.T) {
 		t.Errorf("Wrong status code: got %v want %v", status, http.StatusOK)
 	}
 }
+
+func TestGet3PID(t *testing.T) {
+	req, err := http.NewRequest("GET", Config.BaseURI+"/_matrix/client/r0/account/3pid", nil)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	query := req.URL.Query()
+	query.Add("access_token", user.AccessToken)
+
+	req.URL.RawQuery = query.Encode()
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	if status := res.StatusCode; status != http.StatusOK {
+		t.Errorf("Wrong status code: got %v want %v", status, http.StatusOK)
+	}
+}
