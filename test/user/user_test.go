@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	user User
+	user *User
 )
 
 func TestRegister(t *testing.T) {
