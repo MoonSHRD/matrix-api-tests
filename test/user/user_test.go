@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	user *User
+	user User
 )
 
 func TestRegister(t *testing.T) {
@@ -51,7 +51,7 @@ func TestRegister(t *testing.T) {
 		}
 	}
 
-	if err = json.NewDecoder(res.Body).Decode(user); err != nil {
+	if err = json.NewDecoder(res.Body).Decode(&user); err != nil {
 		t.Fatal(err.Error())
 	}
 }
